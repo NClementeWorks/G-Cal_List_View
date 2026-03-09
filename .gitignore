@@ -40,5 +40,8 @@ __screenshots__/
 # Vite
 *.timestamp-*-*.mjs
 
+#VSCode
+.vscode
+
 #Project specific
 client_secret*

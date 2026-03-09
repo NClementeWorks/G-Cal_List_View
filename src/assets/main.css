@@ -1,0 +1,13 @@
+
+.date_time_wrapper {
+  top: -.6rem;
+}
+
+.date_time_weekday_label {
+  bottom: -.6rem;
+  color: #bbb;
+}
+
+.date_time_timezone_abbr {
+  padding-top: var(--v-field-input-padding-top);
+}

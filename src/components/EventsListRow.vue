@@ -2,6 +2,8 @@
 <script setup>
 
   import DateTimeInput from './DateTimeInput.vue';
+  import StateBtn from './StateBtn.vue';
+  import Status from '@/constants/status'
   // import date_parser from 'any-date-parser'
   import colors from 'vuetify/util/colors'
   import { computed, reactive, ref, watch } from 'vue';
@@ -40,6 +42,7 @@
     },
     location: calendar_event.value.location,
     description: calendar_event.value.description,
+    save_status: calendar_event.value.save_status,
   })
   // console.log('event_data',event_data)
 
@@ -49,6 +52,11 @@
       || event_data.end.date_time !== calendar_event.value.end.dateTime
       || event_data.location !== calendar_event.value.location
       || event_data.description !== calendar_event.value.description
+  })
+
+  watch ( data_modified, value => {
+    if ( value )
+      event_data.save_status = Status.NONE
   })
 
   const event_data_updated = ref ( 0 )
@@ -129,7 +137,6 @@
   //
   import { required, helpers } from '@vuelidate/validators'
   import { useVuelidate } from '@vuelidate/core'
-import StateBtn from './StateBtn.vue';
 
   const is_date_before = compare => value => {
     const dates_compare = date.isBefore ( new Date ( value ), new Date ( compare ))
@@ -190,19 +197,34 @@ import StateBtn from './StateBtn.vue';
   }
 
   const vuelidate = useVuelidate ( validation_rules, event_data )
+  const upload_btn_visible = computed ( () => {
+    console.log ( 'upload_btn_visible::save_status', event_data.save_status)
+     return event_data.is_new
+     || data_modified.value
+     || ( !data_modified.value && event_data.save_status !== Status.NONE )
+  })
 
-  const uploading_event = ref ( false )
-  async function submit_event ( event_key ) {
-    console.log('submit_event::key', event_key)
+  async function submit_event () {
+    console.log('submit_event::event_data', event_data)
     vuelidate.value.$validate ()
     if ( !vuelidate.value.$error ) {
-      uploading_event.value = true
-      await events_list_store.update_event ( event_data )
-      uploading_event.value = false
+      event_data.save_status = Status.PROGRESS
+      try {
+        await events_list_store.update_event ( event_data )
+        event_data.save_status = Status.SUCCESS
+        setTimeout ( async () => {
+          event_data.save_status = Status.NONE
+        }, 2000)
+      }
+      catch ( err ) {
+        event_data.save_status = Status.ERROR
+        console.error ( err )
+      }
     }
     else
       alert('Please, fix errors on event information')
   }
+
 
   const row_in_focus = ref ( false )
   const row_hovered = ref ( false )
@@ -297,23 +319,26 @@ import StateBtn from './StateBtn.vue';
       </VTextarea>
     </td>
     <td class="position-relative">
-      <template v-if="data_modified || event_data.is_new">
-        <VTooltip
-          location="top"
-          :text="vuelidate.$invalid ? 'Please, fix errors' : `${ event_data.is_new ? 'Create' : 'Update' } in Google Calendar`"
-          >
-          <template v-slot:activator="{ props }">
-            <StateBtn
-              v-bind="props"
-              icon="mdi-upload"
-              :variant="event_data.is_new ? 'tonal' : 'plain'"
-              :color="vuelidate.$invalid ? 'red-darken-4' : ( event_data.is_new ? 'green-darken-2' : null )"
-              :loading="events_list_store.uploading_event"
-              @click="submit_event ( event_data.key )"
-            ></StateBtn>
-          </template>
-        </VTooltip>
-      </template>
+      <Transition name="fade_out">
+        <div v-if="upload_btn_visible">
+          <VTooltip
+            location="top"
+            :text="vuelidate.$invalid ? 'Please, fix errors' : `${ event_data.is_new ? 'Create' : 'Update' } in Google Calendar`"
+            >
+            <template v-slot:activator="{ props }">
+              <StateBtn
+                v-model="event_data.save_status"
+                v-bind="props"
+                icon="mdi-upload"
+                :variant="event_data.is_new ? 'tonal' : 'plain'"
+                :color="vuelidate.$invalid ? 'red-darken-4' : ( event_data.is_new ? 'green-darken-2' : null )"
+                @click="submit_event"
+              ></StateBtn>
+                <!-- :loading="events_list_store.uploading_event" -->
+            </template>
+          </VTooltip>
+        </div>
+      </Transition>
       <div
         v-if="row_hovered && !event_data.is_new && !data_modified"
         >

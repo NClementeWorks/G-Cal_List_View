@@ -11,3 +11,10 @@
 .date_time_timezone_abbr {
   padding-top: var(--v-field-input-padding-top);
 }
+
+.fade_out-leave-active {
+  transition: opacity 2s ease;
+}
+.fade_out-leave-to {
+  opacity: 0;
+}

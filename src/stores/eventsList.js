@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useGapiCalendarStore } from '@/stores/gapiCalendar'
 import { useDateTimeStore } from '@/stores/dateTime';
 import { useDate } from 'vuetify'
+import Status from '@/constants/status'
 import { ref } from 'vue'
 
 export const useEventsListStore = defineStore('eventsList', () => {
@@ -27,7 +28,7 @@ export const useEventsListStore = defineStore('eventsList', () => {
     events_list.value = results.map ( ( ev, idx ) => ref ({
       ...ev,
       key: events_list.value.length + idx,
-      save_status: '',
+      save_status: Status.NONE,
     }) )
     searching_events.value = false
   }
@@ -46,7 +47,7 @@ export const useEventsListStore = defineStore('eventsList', () => {
     events_list.value = events_list.value.concat ( more_events_list.map ( ( ev, idx ) => ref ({
       ...ev,
       key: events_list.value.length + idx,
-      save_status: '',
+      save_status: Status.NONE,
     }) ) )
     loading_more_events.value = false
   }
@@ -65,9 +66,9 @@ export const useEventsListStore = defineStore('eventsList', () => {
 
     const blank_event = ref ({
       key: events_list.value.length,
-      temp_id: base_date.getTime (),
+      // temp_id: base_date.getTime (),
       is_new: true,
-      save_status: '',
+      save_status: Status.NONE,
 
       summary: '',
       location: '',

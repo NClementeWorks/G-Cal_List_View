@@ -14,7 +14,7 @@ export const useEventsListStore = defineStore('eventsList', () => {
   const events_list = ref ( [] )
   const search_from_date = ref ({
     date_time: date_time_store.format_js_date_to_iso ( new Date ( new Date ().setHours ( 0, 0, 0, 0 )).toString () ),
-    timezone: 'America/Chicago',
+    timezone: date_time_store.get_timezone_data ( new Date () )?.utc [ 0 ],
   })
   console.log('eventsList::search_from_date', search_from_date.value)
   const items_per_page = ref ( 15 )

@@ -2,49 +2,16 @@
 // import {
   // RouterLink,
   // RouterView } from 'vue-router'
-import { ref } from 'vue';
 import HomeView from './views/HomeView.vue';
 
 import { useGapiStore } from '@/stores/gapi'
+import { useLoginStore } from '@/stores/login'
 
-const gapiStore = useGapiStore ()
-gapiStore.load_gapi ()
+const gapi_store = useGapiStore ()
+gapi_store.load_gapi ()
 
-const refresh_token = ref ( localStorage.getItem ( 'gclv_rtk' ) )
-console.log('App::refresh_token',refresh_token)
+const login_store = useLoginStore ()
 
-const gclv_path = document.getElementById ( 'gclv_path' ).value
-console.log('App::gclv_path',gclv_path)
-
-async function get_auth_url () {
-  console.log('get_auth_url')
-
-  if ( refresh_token.value?.length ) {
-    // log out
-    // localStorage.removeItem ( 'gclv_rtk' )
-    open_browser_popup ( `https://127.0.0.1/edsa-NC/gclv_login?logout`, () => {
-      refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
-    } )
-  }
-  else {
-    // log in
-    open_browser_popup ( `https://127.0.0.1/edsa-NC/gclv_login?login`, () => {
-      refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
-    } )
-  }
-}
-
-function open_browser_popup ( url, on_close_fn ) {
-  const popup = window.open ( url, 'Google Authentication','height=600,width=400')
-  console.log('App::popup', popup)
-  var popup_watcher = setInterval ( function () {
-    if ( popup.closed ) {
-      console.log('popup closed...')
-      clearInterval ( popup_watcher )
-      on_close_fn ()
-    }
-  }, 1000 )
-}
 </script>
 
 <template>
@@ -55,15 +22,15 @@ function open_browser_popup ( url, on_close_fn ) {
         <VAppBarTitle>My Google Calendar Events List</VAppBarTitle>
         <div>
           <VLabel
-            v-if="!refresh_token?.length"
+            v-if="!login_store.is_logged"
             >
             You are logged out
           </VLabel>
           <VAppBarNavIcon
             id="login_btn"
             size="x-large"
-            :icon="`mdi-account-${ refresh_token?.length ? 'check' : 'alert' }-outline`"
-            :color="refresh_token?.length ? 'success' : 'error'"
+            :icon="`mdi-account-${ login_store.is_logged ? 'check' : 'alert' }-outline`"
+            :color="login_store.is_logged ? 'success' : 'error'"
           ></VAppBarNavIcon>
           <VMenu
             activator="#login_btn"
@@ -71,12 +38,13 @@ function open_browser_popup ( url, on_close_fn ) {
             >
             <VList>
               <VListItem>
-                <VListItemAction
-                  @click="get_auth_url"
+                <VBtn
                   style="cursor: pointer"
+                  :color="login_store.is_logged ? 'error' : 'success'"
+                  @click="login_store.handle_authentication"
                   >
-                  Log {{ refresh_token?.length ? 'Out' : 'In' }}
-                </VListItemAction>
+                  Log {{ login_store.is_logged ? 'Out' : 'In' }}
+                </VBtn>
               </VListItem>
             </VList>
           </VMenu>

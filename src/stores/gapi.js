@@ -62,7 +62,7 @@ export const useGapiStore = defineStore('gapi', () => {
    * Enables user interaction after all libraries are loaded.
    */
   async function set_token () {
-    if ( gapiInited && gisInited ) {
+    if ( gapiInited && gisInited && login_store.is_logged ) {
       console.log('gapi::set_token')
       const nonce = document.getElementById ( '_wpnonce' ).value
       console.log('set_token::nonce', nonce)
@@ -80,7 +80,7 @@ export const useGapiStore = defineStore('gapi', () => {
         const json_result = await result.json ()
         console.log('gapi::set_token::json_result', json_result)
         if ( json_result.status !== 200 || json_result.token?.trim ().length <= 0 )
-          alert ('Error getting google authentication token. If the problem persists, please contact your web master.')
+          alert ('Error getting google authentication token. You may be logged out - Please, log in on the top right corner. If the problem persists, please contact your web master.')
         else {
           window.localStorage.setItem ( 'gclv_token_time', new Date ().getTime () )
           window.gapi.client.setToken ({
@@ -135,5 +135,6 @@ export const useGapiStore = defineStore('gapi', () => {
     load_gapi,
     gapi_ready,
     call_gapi,
+    set_token,
    }
 })

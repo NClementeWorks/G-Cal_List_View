@@ -1,9 +1,11 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useDate } from 'vuetify'
+import { useLoginStore } from './login'
 
 export const useGapiStore = defineStore('gapi', () => {
 
+  const login_store = useLoginStore ()
   const date_store = useDate ()
 
   const gapi_ready = ref ( false )
@@ -66,26 +68,35 @@ export const useGapiStore = defineStore('gapi', () => {
       console.log('set_token::nonce', nonce)
       const _test_env = new URL ( window.location.href ).searchParams.get ( "test" )
 
-      const result = await fetch ( `${ window.location.origin }${ _test_env || '' }/wp-json/gclv/v1/auth_token?_wpnonce=${ nonce }`, {
+      const result = await fetch ( `${ window.location.origin }${ _test_env || '' }/wp-json/gclv/v1/auth_token`, {
         headers: {
           'X-WP-Nonce': nonce,
-        }
+          'GCLV-RTK': login_store.refresh_token,
+        },
       } )
       console.log('gapi::set_token::result', result)
+      if ( result.status === 200 ) {
 
-      const json_result = await result.json ()
-      console.log('gapi::set_token::json_result', json_result)
-      if ( json_result.status !== 200 || json_result.token?.trim ().length <= 0 )
-        alert ('Error getting google authentication token. If the problem persists, please contact your web master.')
+        const json_result = await result.json ()
+        console.log('gapi::set_token::json_result', json_result)
+        if ( json_result.status !== 200 || json_result.token?.trim ().length <= 0 )
+          alert ('Error getting google authentication token. If the problem persists, please contact your web master.')
+        else {
+          window.localStorage.setItem ( 'gclv_token_time', new Date ().getTime () )
+          window.gapi.client.setToken ({
+            "access_token": json_result.token,
+            // "token_type": "Bearer",
+            // "expires_in": 3599,
+            // "scope": "https://www.googleapis.com/auth/calendar.readonly"
+          })
+          gapi_ready.value = true
+        }
+
+      }
       else {
-        window.localStorage.setItem ( 'gclv_token_time', new Date ().getTime () )
-        window.gapi.client.setToken ({
-          "access_token": json_result.token,
-          // "token_type": "Bearer",
-          // "expires_in": 3599,
-          // "scope": "https://www.googleapis.com/auth/calendar.readonly"
-        })
-        gapi_ready.value = true
+        const text_result = await result.text ()
+        console.log ('gapi::text_result\n', text_result)
+        // TODO: handle ERROR state
       }
     }
   }

@@ -6,11 +6,17 @@ import HomeView from './views/HomeView.vue';
 
 import { useGapiStore } from '@/stores/gapi'
 import { useLoginStore } from '@/stores/login'
+import { watch } from 'vue';
 
 const gapi_store = useGapiStore ()
 gapi_store.load_gapi ()
 
 const login_store = useLoginStore ()
+
+watch ( () => login_store.refresh_token, new_value => {
+  console.log ('APP::WATCH::refresh_token', new_value)
+  gapi_store.set_token ()
+})
 
 </script>
 
@@ -51,12 +57,17 @@ const login_store = useLoginStore ()
         </div>
       </VAppBar>
 
-      <!-- <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav> -->
-      <HomeView />
-      <!-- <RouterView /> -->
+      <HomeView v-if="login_store.is_logged" />
+      <VCard v-else>
+        <VCardTitle>You are not logged in!</VCardTitle>
+        <VCardText>
+          Please, use the top right button (
+          <VIcon
+            icon="mdi-account-alert-outline"
+            ></VIcon>
+          ) to log in
+        </VCardText>
+      </VCard>
     </VLayout>
   </VCard>
 </template>

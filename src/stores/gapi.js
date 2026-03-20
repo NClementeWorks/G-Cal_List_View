@@ -72,6 +72,7 @@ export const useGapiStore = defineStore('gapi', () => {
         headers: {
           'X-WP-Nonce': nonce,
           'GCLV-RTK': login_store.refresh_token,
+          'GCLV-RD_URL': login_store.get_login_url (),
         },
       } )
       console.log('gapi::set_token::result', result)

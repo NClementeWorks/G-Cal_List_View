@@ -3,6 +3,10 @@ import { computed, ref } from 'vue';
 
 export const useLoginStore = defineStore ( 'login', () => {
 
+  const gclv_login_url = document.getElementById ( 'gclv_login_url' )?.value
+  const gclv_login_page_url_query_char = gclv_login_url.match ( /\?/ ) ? '&' : '?'
+  function get_login_url () { return gclv_login_url }
+
   const refresh_token = ref ( localStorage.getItem ( 'gclv_rtk' ) )
   console.log('login::refresh_token',refresh_token.value)
 
@@ -15,14 +19,13 @@ export const useLoginStore = defineStore ( 'login', () => {
 
     if ( refresh_token.value?.length ) {
       // log out
-      // localStorage.removeItem ( 'gclv_rtk' )
-      open_browser_popup ( `https://127.0.0.1/edsa-NC/gclv_login?logout`, () => {
+      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }logout`, () => {
         refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
       } )
     }
     else {
       // log in
-      open_browser_popup ( `https://127.0.0.1/edsa-NC/gclv_login?login`, () => {
+      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }login`, () => {
         refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
       } )
     }
@@ -45,5 +48,6 @@ export const useLoginStore = defineStore ( 'login', () => {
     refresh_token,
     is_logged,
     handle_authentication,
+    get_login_url,
   }
 })

@@ -1,15 +1,9 @@
 <!-- EventsListToolbar -->
 <script setup>
   import DateTimeInput from './DateTimeInput.vue';
-  // import { ref } from 'vue';
 
   import { useEventsListStore } from '@/stores/eventsList';
-// import StateBtn from './StateBtn.vue';
-// import { ref } from 'vue';
   const events_list_store = useEventsListStore ()
-
-  // import { useDate } from 'vuetify'
-  // const date_store = useDate()
 
   function add_event_for_today () {
     const new_date = new Date ()
@@ -30,13 +24,11 @@
     })
   }
 
-  // const btn = ref('')
 </script>
 
 <template>
   <VRow>
     <VCol class="d-flex align-center">
-      <!-- <VLabel>From date:<VTextField>2026 / 02 / 20</VTextField></VLabel> -->
       <div class="w-50">
         <DateTimeInput
           variant="outlined"
@@ -48,9 +40,6 @@
           v-model="events_list_store.search_from_date"
           @keypress.enter="load_events"
           />
-          <!-- :show_today -->
-          <!-- @mouseenter="date_hover = true"
-          @mouseleave="date_hover = false" -->
       </div>
       <VBtn
         variant="tonal"
@@ -60,14 +49,6 @@
         >
         Load Events
       </VBtn>
-
-    <!-- <StateBtn
-      v-model="btn"
-      icon="mdi-upload"
-      variant="tonal"
-      color="primary"
-      ></StateBtn> -->
-
 
     </VCol>
     <VCol class="d-flex justify-end">

@@ -2,6 +2,9 @@
 <script setup>
   import DateTimeInput from './DateTimeInput.vue';
 
+  import { useGapiStore } from '@/stores/gapi';
+  const gapi_store = useGapiStore ()
+
   import { useEventsListStore } from '@/stores/eventsList';
   const events_list_store = useEventsListStore ()
 
@@ -46,6 +49,7 @@
         :color="events_list_store.searching_events ? 'indigo' : 'grey-darken-2'"
         @click="load_events"
         :loading="events_list_store.searching_events"
+        :disabled="!gapi_store.gapi_ready"
         >
         Load Events
       </VBtn>
@@ -56,6 +60,7 @@
         @click="add_event_for_today"
         color="indigo"
         prepend-icon="mdi-plus"
+        :disabled="!gapi_store.gapi_ready"
         >
         New Event
       </VBtn>

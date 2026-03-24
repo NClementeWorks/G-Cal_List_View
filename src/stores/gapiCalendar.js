@@ -41,19 +41,14 @@ export const useGapiCalendarStore = defineStore('gapiCalendar', () => {
       request
     )
     console.log('resp:', response)
-    console.log('last date:', response?.result?.items [ response?.result?.items?.length - 1 ].start?.dateTime)
+    console.log('last date:', response?.result?.items [ response?.result?.items?.length - 1 ]?.start?.dateTime)
 
     //
     // set token to load next page
     next_page_token.value = response?.result?.nextPageToken
     console.log('has nextPageToken:', !!next_page_token.value, next_page_token.value )
 
-    const events = response.result.items
-    if ( !events || events.length == 0 ) {
-      return 'No events found.'
-    }
-
-    return events
+    return response.result.items
   }
 
   async function create_event ( event_data ) {

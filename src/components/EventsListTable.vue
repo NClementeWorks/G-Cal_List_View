@@ -2,6 +2,9 @@
 <script setup>
   import EventsListRow from './EventsListRow.vue';
 
+  import { useGapiStore } from '@/stores/gapi';
+  const gapi_store = useGapiStore ()
+
   import { useEventsListStore } from '@/stores/eventsList';
   const events_list_store = useEventsListStore ()
 
@@ -43,7 +46,7 @@
 </script>
 
 <template>
-  <template v-if="events_list_store.events_list && events_list_store.events_list.length">
+  <template v-if="gapi_store.gapi_ready">
 
     <VRow>
       <VCol>
@@ -60,6 +63,9 @@
               :ref="itemRef"
               :calendar_event="item"
               ></EventsListRow>
+          </template>
+          <template #no-data>
+            <h4>No Events Found</h4>
           </template>
           <template #bottom>
             <VBtn

@@ -41,7 +41,6 @@
           hide_time
           hide_weekday
           v-model="events_list_store.search_from_date"
-          @keypress.enter="load_events"
           />
       </div>
       <VBtn

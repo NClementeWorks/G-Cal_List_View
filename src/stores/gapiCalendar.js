@@ -54,11 +54,6 @@ export const useGapiCalendarStore = defineStore('gapiCalendar', () => {
     }
 
     return events
-    // Flatten to string to display
-    // output.value = events.reduce(
-    //     (str, event) => `${str}${event.summary} (${event.start.dateTime || event.start.date})\n`,
-    //     'Events:\n')
-    // document.getElementById('content').innerText = output
   }
 
   async function create_event ( event_data ) {

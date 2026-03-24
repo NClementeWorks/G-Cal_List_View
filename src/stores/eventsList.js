@@ -20,6 +20,7 @@ export const useEventsListStore = defineStore('eventsList', () => {
   const items_per_page = ref ( 15 )
   const searching_events = ref ( false )
   const loading_more_events = ref ( false )
+  let last_event_list_key = 0
 
   async function load_events ( params ) {
     searching_events.value = true
@@ -27,10 +28,12 @@ export const useEventsListStore = defineStore('eventsList', () => {
     console.log('load_events::results', results)
     events_list.value = results.map ( ( ev, idx ) => ref ({
       ...ev,
-      key: events_list.value.length + idx,
+      key: events_list.value.length + idx + last_event_list_key,
       save_status: Status.NONE,
     }) )
     searching_events.value = false
+    if ( events_list.value.length )
+      last_event_list_key = events_list.value [ events_list.value.length - 1 ]?.key
   }
 
   async function load_more_events () {

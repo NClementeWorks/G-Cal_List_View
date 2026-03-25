@@ -32,12 +32,21 @@ watch ( () => login_store.refresh_token, new_value => {
             >
             You are logged out
           </VLabel>
-          <VAppBarNavIcon
+          <VBtn
             id="login_btn"
-            size="x-large"
-            :icon="`mdi-account-${ login_store.is_logged ? 'check' : 'alert' }-outline`"
-            :color="login_store.is_logged ? 'success' : 'error'"
-          ></VAppBarNavIcon>
+            style="margin-right: 1rem"
+            append-icon="mdi-chevron-down"
+            size="xx-large"
+            variant="plain"
+            >
+            <template #prepend>
+              <VAppBarNavIcon
+                size="xx-large"
+                :icon="`mdi-account-${ login_store.is_logged ? 'check' : 'alert' }-outline`"
+                :color="login_store.is_logged ? 'success' : 'error'"
+              ></VAppBarNavIcon>
+            </template>
+          </VBtn>
           <VMenu
             activator="#login_btn"
             open-on-hover
@@ -49,7 +58,12 @@ watch ( () => login_store.refresh_token, new_value => {
                   :color="login_store.is_logged ? 'error' : 'success'"
                   @click="login_store.handle_authentication"
                   >
-                  Log {{ login_store.is_logged ? 'Out' : 'In' }}
+                  <span v-if="login_store.is_logged">
+                    Log out
+                  </span>
+                  <span v-else>
+                    Log in to Google Calendar
+                  </span>
                 </VBtn>
               </VListItem>
             </VList>

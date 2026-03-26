@@ -15,7 +15,7 @@
 
   watch ( gapi_ready, async new_value => {
     console.log('gapi_ready::new_value', new_value)
-    events_list_store.load_events ({ date: new Date ().toISOString (), max_results: events_list_store.items_per_page })
+    events_list_store.load_events_for_today ()
   })
 
 </script>

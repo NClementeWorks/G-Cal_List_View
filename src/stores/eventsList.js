@@ -55,6 +55,10 @@ export const useEventsListStore = defineStore('eventsList', () => {
     loading_more_events.value = false
   }
 
+  function load_events_for_today () {
+    load_events ({ date: new Date ().toISOString (), max_results: items_per_page.value })
+  }
+
   const last_event_added = ref ( null )
   function add_empty_event ( _base_date ) {
     console.log('@add_empty_event-----')
@@ -170,6 +174,7 @@ export const useEventsListStore = defineStore('eventsList', () => {
     loading_more_events,
     load_events,
     load_more_events,
+    load_events_for_today,
     last_event_added,
     add_empty_event,
     update_event,

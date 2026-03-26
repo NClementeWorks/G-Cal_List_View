@@ -31,8 +31,27 @@ export const useLoginStore = defineStore ( 'login', () => {
   }
 
   function open_browser_popup ( url, on_close_fn ) {
-    const popup = window.open ( url, 'Google Authentication','height=600,width=400')
+    //
+    // Center popup
+    //                                                   ? Most browsers     : Firefox
+    const screen_left = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+    const screen_top  = window.screenTop  !==  undefined ? window.screenTop  : window.screenY;
+
+    const screen_width  = window.innerWidth  ? window.innerWidth  : document.documentElement.clientWidth  ? document.documentElement.clientWidth  : screen.width;
+    const screen_height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+    const popup_width = 500
+    const popup_height = 600
+
+    const popup_left = ( screen_width - popup_width ) / 2 + screen_left
+    const popup_top = ( screen_height - popup_height ) / 3 + screen_top
+
+    //
+    // Open popup
+    //
+    const popup = window.open ( url, 'Google Authentication',`height=${ popup_height },width=${ popup_width },top=${ popup_top },left=${ popup_left }`)
     console.log('login::popup', popup)
+
     var popup_watcher = setInterval ( function () {
       // console.log('...popup active')
       if ( popup.closed ) {

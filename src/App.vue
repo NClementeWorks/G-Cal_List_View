@@ -29,6 +29,7 @@ watch ( () => login_store.refresh_token, new_value => {
         <div>
           <VLabel
             v-if="!login_store.is_logged"
+            class="mr-4"
             >
             You are logged out
           </VLabel>
@@ -50,11 +51,12 @@ watch ( () => login_store.refresh_token, new_value => {
           <VMenu
             activator="#login_btn"
             open-on-hover
+            open-delay=".1"
             >
             <VList>
               <VListItem>
                 <VBtn
-                  style="cursor: pointer"
+                  style="cursor: pointer; text-transform: none;"
                   :color="login_store.is_logged ? 'error' : 'success'"
                   @click="login_store.handle_authentication"
                   >
@@ -62,7 +64,7 @@ watch ( () => login_store.refresh_token, new_value => {
                     Log out
                   </span>
                   <span v-else>
-                    Log in to Google Calendar
+                    Login to Google Calendar
                   </span>
                 </VBtn>
               </VListItem>

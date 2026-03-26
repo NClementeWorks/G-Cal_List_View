@@ -12,6 +12,7 @@ export const useDateTimeStore = defineStore('dateTime', () => {
   function extract_iso_timezone ( iso_date ) {
     return iso_date?.match( /(?<timezone>\+|\-\d{2}:\d{2})$/ )?.groups?.timezone
   }
+
   function concat_iso_datetime ( date, time, utc_timezone ) {
     console.log('concat_iso_datetime::utc_timezone',utc_timezone)
     const date_time = `${ date }T${ time }`

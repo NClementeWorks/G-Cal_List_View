@@ -4,15 +4,15 @@
   import DateTimeInput from './DateTimeInput.vue';
   import StateBtn from './StateBtn.vue';
   import Status from '@/constants/status'
-  // import date_parser from 'any-date-parser'
+  import date_parser from 'any-date-parser'
   import colors from 'vuetify/util/colors'
   import { computed, reactive, ref, watch } from 'vue';
 
   import { useDate } from 'vuetify'
   const date = useDate()
 
-  // import { useDateTimeStore } from '@/stores/dateTime';
-  // const date_time = useDateTimeStore ()
+  import { useDateTimeStore } from '@/stores/dateTime';
+  const date_time = useDateTimeStore ()
 
   import { useEventsListStore } from '@/stores/eventsList';
   const events_list_store = useEventsListStore ()
@@ -72,42 +72,42 @@
     // event_data_updated.value++
   })
 
-  // watch ( () => event_data.start.date_time, ( new_date, old_date ) => {
+  watch ( () => event_data.start.date_time, ( new_date, old_date ) => {
 
-      // console.log('WATCH::start::new_date',new_date)
-      // console.log('WATCH::start::date_store.locale',date.locale)
-      // console.log('WATCH::start::event_data.start',event_data.start)
-      // console.log('WATCH::start::new Date',new Date (event_data.start.date_time))
-      // const gmt = Intl.DateTimeFormat ( "en-US", {
-      //     timeZone: event_data.start.timezone,
-      //     timeZoneName: "longOffset",
-      // } ).format ( new Date ( new_date ) )
-      // .match ( /GMT(?<gmt>[+|-][\d:]+)/ ).groups.gmt
-      // console.log('WATCH::start::gmt',gmt)
+      console.log('WATCH::start::new_date',new_date)
+      console.log('WATCH::start::date_store.locale',date.locale)
+      console.log('WATCH::start::event_data.start',event_data.start)
+      console.log('WATCH::start::new Date',new Date (event_data.start.date_time))
+      const gmt = Intl.DateTimeFormat ( "en-US", {
+          timeZone: event_data.start.timezone,
+          timeZoneName: "longOffset",
+      } ).format ( new Date ( new_date ) )
+      .match ( /GMT(?<gmt>[+|-][\d:]+)/ ).groups.gmt
+      console.log('WATCH::start::gmt',gmt)
 
-  //   if ( new Date ( event_data.end.date_time ) - new Date ( new_date ) <= 0 ) {
-  //     console.log('WATCH::start::OLD-event_data.end.date_time', event_data.end.date_time)
-  //     //
-  //     // shift end date in the same ammount as the start date
-  //     const diff = date.getDiff ( new Date ( new_date ), new Date ( old_date ) , 'minutes' )
-  //     const new_end_date_parsed = date_parser.attempt ( date.format ( date.addMinutes ( event_data.end.date_time, diff ), 'fullDateTime24h' ) )
+    if ( new Date ( event_data.end.date_time ) - new Date ( new_date ) <= 0 ) {
+      console.log('WATCH::start::OLD-event_data.end.date_time', event_data.end.date_time)
+      //
+      // shift end date in the same ammount as the start date
+      const diff = date.getDiff ( new Date ( new_date ), new Date ( old_date ) , 'minutes' )
+      const new_end_date_parsed = date_parser.attempt ( date.format ( date.addMinutes ( event_data.end.date_time, diff ), 'fullDateTime24h' ) )
 
-  //     console.log('WATCH::start::new_end_date_parsed', new_end_date_parsed, new Date(new_end_date_parsed) )
-  //     const new_end_date = `${ new_end_date_parsed.year }-`
-  //       + `${ date_time.to_two_digits ( new_end_date_parsed.month ) }-`
-  //       + `${ date_time.to_two_digits ( new_end_date_parsed.day ) }T`
-  //       + `${ date_time.to_two_digits ( new_end_date_parsed.hour ) }:`
-  //       + `${ date_time.to_two_digits ( new_end_date_parsed.minute ) }:`
-  //       // + `00${ new_timezone.gmt }`
-  //       + `00`//${ date_time.extract_iso_timezone ( event_data.end.date_time ) }`
-  //     const s_gmt = date_time.get_timezone_data ( new_date ).gmt//, event_data.end.timezone )
-  //     const e_gmt = date_time.get_timezone_data ( event_data.end.date_time ).gmt//, event_data.end.timezone )
-  //     const gmt = date_time.get_timezone_data ( new_end_date ).gmt//, event_data.end.timezone )
-  //     console.log('WATCH::start::gmt', gmt, s_gmt, e_gmt)
-  //     event_data.end.date_time = `${ new_end_date }${ gmt }`
-  //     console.log('WATCH::start::event_data.end.date_time', event_data.end.date_time)
-  //   }
-  // })
+      console.log('WATCH::start::new_end_date_parsed', new_end_date_parsed, new Date(new_end_date_parsed) )
+      const new_end_date = `${ new_end_date_parsed.year }-`
+        + `${ date_time.to_two_digits ( new_end_date_parsed.month ) }-`
+        + `${ date_time.to_two_digits ( new_end_date_parsed.day ) }T`
+        + `${ date_time.to_two_digits ( new_end_date_parsed.hour ) }:`
+        + `${ date_time.to_two_digits ( new_end_date_parsed.minute ) }:`
+        // + `00${ new_timezone.gmt }`
+        + `00`//${ date_time.extract_iso_timezone ( event_data.end.date_time ) }`
+      const s_gmt = date_time.get_timezone_data ( new_date ).gmt//, event_data.end.timezone )
+      const e_gmt = date_time.get_timezone_data ( event_data.end.date_time ).gmt//, event_data.end.timezone )
+      const gmt = date_time.get_timezone_data ( new_end_date ).gmt//, event_data.end.timezone )
+      console.log('WATCH::start::gmt', gmt, s_gmt, e_gmt)
+      event_data.end.date_time = `${ new_end_date }${ gmt }`
+      console.log('WATCH::start::event_data.end.date_time', event_data.end.date_time)
+    }
+  })
 
   // watch ( () => event_data.end.date_time, ( new_date, old_date ) => {
   //   if ( new Date ( new_date ) - new Date ( event_data.start.date_time ) <= 0 ) {

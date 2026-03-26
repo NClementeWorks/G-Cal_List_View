@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue';
+import { useEventsListStore } from './eventsList';
 
 export const useLoginStore = defineStore ( 'login', () => {
+
+  const events_list_store = useEventsListStore ()
 
   const gclv_login_url = document.getElementById ( 'gclv_login_url' )?.value
   const gclv_login_page_url_query_char = gclv_login_url.match ( /\?/ ) ? '&' : '?'
@@ -19,15 +22,11 @@ export const useLoginStore = defineStore ( 'login', () => {
 
     if ( refresh_token.value?.length ) {
       // log out
-      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }logout`, () => {
-        refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
-      } )
+      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }logout`, on_login_logout )
     }
     else {
       // log in
-      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }login`, () => {
-        refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
-      } )
+      open_browser_popup ( `${ gclv_login_url }${ gclv_login_page_url_query_char }login`, on_login_logout )
     }
   }
 
@@ -42,6 +41,11 @@ export const useLoginStore = defineStore ( 'login', () => {
         on_close_fn ()
       }
     }, 1000 )
+  }
+
+  function on_login_logout () {
+    refresh_token.value = localStorage.getItem ( 'gclv_rtk' )
+    events_list_store.load_events_for_today ()
   }
 
   return {

@@ -8,36 +8,32 @@
   import { useEventsListStore } from '@/stores/eventsList';
   const events_list_store = useEventsListStore ()
 
-  import { useDate } from 'vuetify'
-  const date_store = useDate()
-
   const this_year = new Date ().getFullYear ()
   const this_year_two_digit = this_year.toString ().substring(2)
 
   const accepted_date_time_formats = `<h4>Accepted date & time formats</h4>
     <br />
+    <p>Just type in a date or time in any format and we will adjust it for you.</p>
+    <p>These are some of the formats we accept:</p>
+    <br />
     <h6>Dates</h6>
-    <ul class="ml-4">
-      <li>${ date_store.format( new Date (`03/07/${ this_year }`), 'weekday' ) }, 07 March ${ this_year }</li>
-      <li>${ date_store.format( new Date (`03/07/${ this_year }`), 'weekdayShort' ) } 7 March ${ this_year_two_digit }</li>
+    <ul class="ml-8">
       <li>7-Mar-${ this_year }</li>
       <li>07 Mar ${ this_year_two_digit }</li>
       <li>Mar7,${ this_year_two_digit }</li>
       <li>Mar 7</li>
-      <li>7 Mar</li>
       <li>March 7 ${ this_year }</li>
       <li>Mar 7, ${ this_year }</li>
       <li>${ this_year }-03-07</li>
-      <li>03-7-${ this_year_two_digit }</li>
+      <li>3-7-${ this_year_two_digit }</li>
       <li>${ this_year }/3/7</li>
-      <li>3/07/${ this_year }</li>
-      <li>03/7/${ this_year_two_digit }</li>
-      <li>7/3</li>
+      <li>03/07/${ this_year }</li>
+      <li>3/7/${ this_year_two_digit }</li>
       <li>${ this_year }0307</li>
     </ul>
     <br />
     <h6>Times</h6>
-    <ul class="ml-4">
+    <ul class="ml-8">
       <li>9:26 PM</li>
       <li>9:26 p.m.</li>
       <li>9:26pm</li>
@@ -102,19 +98,23 @@
             <th v-for="header in headers [0]" :key="header.key"
               :style="{
                 width: header.width || 'unset',
-              }">
-              {{ header.title }}
+                textAlign: 'left',
+              }"
+              class="py-2 px-4"
+              >
+              <span style="opacity: .5">{{ header.title }}</span>
               <VIcon
                 v-if="header.hint"
                 :id="`${ header.key }_hint`"
                 icon="mdi-information-variant-circle-outline"
+                class="ml-1"
                 color="blue-grey-lighten-4"
                 ></VIcon>
                 <VTooltip
                   :activator="`#${ header.key }_hint`"
                   >
                   <div
-                    class="mt-4 mb-2"
+                    class="mt-4 mb-2 "
                     v-html="header.hint"
                     ></div>
                 </VTooltip>

@@ -98,11 +98,11 @@
             <th v-for="header in headers [0]" :key="header.key"
               :style="{
                 width: header.width || 'unset',
-                textAlign: 'left',
+                background: 'white',
               }"
-              class="py-2 px-4"
+              class="py-2 px-4 border-b-thin text-left"
               >
-              <span style="opacity: .5">{{ header.title }}</span>
+              <span class="opacity-80 font-weight-light">{{ header.title }}</span>
               <VIcon
                 v-if="header.hint"
                 :id="`${ header.key }_hint`"

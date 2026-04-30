@@ -4,7 +4,8 @@ Google Calendar List View
 Version: 0.1-beta
 
 This web application integrates with Google Calendar to present events in a streamlined list format rather than the usual calendar view. It was specifically designed to accelerate data entry, allowing for efficient creation of multiple events with predetermined dates and times.
-This concept was developed when an organization I belong to had to add 23 new distinct events to their Google Calendar just for the next month and a half, and were clearly running behind on completing the task. This is a conceptual side-project.
+
+The idea for this application emerged when an organization I’m part of faced the challenge of adding 23 new, distinct events to their Google Calendar, just spanning the next month and a half schedule. It became evident that they were falling behind on getting the task done. This serves as a conceptual side project.
 
 ## How to use
 

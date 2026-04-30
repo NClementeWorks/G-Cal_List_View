@@ -1,4 +1,5 @@
-# G-Cal_List_View
+# G-Cal List View
+Google Calendar List View
 
 Version: 0.1-beta
 
